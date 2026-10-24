@@ -4,6 +4,7 @@ permissions: {}
 jobs:
   probe:
     runs-on: ubuntu-24.04
+    timeout-minutes: 5
     environment: csm-ci
     steps:
       - id: server
@@ -11,6 +12,8 @@ jobs:
         with:
           client-id: ${{ vars.CSM_CI_SERVER_APP_CLIENT_ID }}
           private-key: ${{ secrets.CSM_CI_SERVER_APP_PRIVATE_KEY }}
+          # The token must cover every installed repository so the last step can compare the set.
+          # jactionlint ignore=github-app
           owner: ${{ github.repository_owner }}
           permission-actions: read
           permission-administration: write
@@ -25,6 +28,8 @@ jobs:
         with:
           client-id: ${{ vars.CSM_CI_APPROVER_APP_CLIENT_ID }}
           private-key: ${{ secrets.CSM_CI_APPROVER_APP_PRIVATE_KEY }}
+          # The token must cover every installed repository so the last step can compare the set.
+          # jactionlint ignore=github-app
           owner: ${{ github.repository_owner }}
           permission-contents: read
           permission-pull-requests: write
