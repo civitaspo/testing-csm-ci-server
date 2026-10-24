@@ -1,0 +1,37 @@
+name: csm-ci-probe
+on: workflow_dispatch
+permissions: {}
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    environment: csm-ci
+    steps:
+      - id: server
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ vars.CSM_CI_SERVER_APP_ID }}
+          private-key: ${{ secrets.CSM_CI_SERVER_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          permission-actions: read
+          permission-administration: write
+          permission-attestations: write
+          permission-checks: write
+          permission-contents: write
+          permission-issues: write
+          permission-pull-requests: write
+          permission-workflows: write
+      - id: approver
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ vars.CSM_CI_APPROVER_APP_ID }}
+          private-key: ${{ secrets.CSM_CI_APPROVER_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          permission-contents: read
+          permission-pull-requests: write
+      - name: installed repositories
+        env:
+          SERVER_TOKEN: ${{ steps.server.outputs.token }}
+          APPROVER_TOKEN: ${{ steps.approver.outputs.token }}
+        run: |
+          echo "server:   $(GH_TOKEN=$SERVER_TOKEN gh api /installation/repositories --jq '[.repositories[].name] | sort | join(",")')"
+          echo "approver: $(GH_TOKEN=$APPROVER_TOKEN gh api /installation/repositories --jq '[.repositories[].name] | sort | join(",")')"
