@@ -5,6 +5,9 @@ on:
       pr:
         required: true
         type: string
+      reviewer:
+        required: true
+        type: string
 permissions: {}
 jobs:
   spike:
@@ -30,13 +33,15 @@ jobs:
       - env:
           SERVER: ${{ steps.server.outputs.token }}
           APPROVER: ${{ steps.approver.outputs.token }}
+          REVIEWER: ${{ inputs.reviewer }}
           PR: ${{ inputs.pr }}
           R: civitaspo/testing-csm-ci-client
         run: |
           head=$(GH_TOKEN=$SERVER gh api repos/$R/pulls/$PR --jq .head.sha)
           echo "head=$head"
           echo "merge before approval:"; GH_TOKEN=$SERVER gh api -X PUT repos/$R/pulls/$PR/merge -f sha=$head -f merge_method=squash 2>&1 | head -2 || true
-          echo "approve:"; GH_TOKEN=$APPROVER gh api -X POST repos/$R/pulls/$PR/reviews -f event=APPROVE -f commit_id=$head --jq '"review \(.id) by \(.user.login) state \(.state)"'
+          if [ "$REVIEWER" = server ]; then RT=$SERVER; else RT=$APPROVER; fi
+          echo "approve as $REVIEWER:"; GH_TOKEN=$RT gh api -X POST repos/$R/pulls/$PR/reviews -f event=APPROVE -f commit_id=$head --jq '"review \(.id) by \(.user.login) state \(.state)"'
           sleep 5
           echo "reviewDecision: $(GH_TOKEN=$SERVER gh api graphql -f query='query($n:Int!){repository(owner:"civitaspo",name:"testing-csm-ci-client"){pullRequest(number:$n){reviewDecision mergeStateStatus}}}' -F n=$PR --jq '.data.repository.pullRequest|tostring')"
           echo "merge after approval:"; GH_TOKEN=$SERVER gh api -X PUT repos/$R/pulls/$PR/merge -f sha=$head -f merge_method=squash 2>&1 | head -2 || true
