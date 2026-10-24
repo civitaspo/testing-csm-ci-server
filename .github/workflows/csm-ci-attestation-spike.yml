@@ -1,0 +1,47 @@
+name: csm-ci attestation spike
+on:
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: csm-ci-attestation-spike
+  cancel-in-progress: false
+jobs:
+  attest:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - name: Prepare fixed subject and client binding
+        run: |
+          printf 'csm-ci attestation spike\n' > subject.txt
+          cat > predicate.json <<'JSON'
+          {"client_repository":"civitaspo/testing-csm-ci-client","merge_sha":"aaeadfc638a025d96b4e9bd2ab0a7f88e4d2e8e0","tag":"v0.0.0-spike"}
+          JSON
+      - id: attest
+        uses: actions/attest@f057fd524d485ac48d9b534c235aad15b5bb303f # v3
+        with:
+          subject-path: subject.txt
+          predicate-type: https://github.com/civitaspo/csm-ci-actions/attestation/release/v1
+          predicate-path: predicate.json
+      - name: Verify signature and expected client fields
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh attestation verify subject.txt \
+            --owner civitaspo \
+            --signer-workflow civitaspo/testing-csm-ci-server/.github/workflows/csm-ci-attestation-spike.yml \
+            --predicate-type https://github.com/civitaspo/csm-ci-actions/attestation/release/v1 \
+            --deny-self-hosted-runners --format json > verified.json
+          jq -e 'any(.[].verificationResult.statement; .predicate.client_repository == "civitaspo/testing-csm-ci-client" and .predicate.merge_sha == "aaeadfc638a025d96b4e9bd2ab0a7f88e4d2e8e0" and .predicate.tag == "v0.0.0-spike")' verified.json
+          if jq -e 'any(.[].verificationResult.statement; .predicate.client_repository == "civitaspo/not-the-client")' verified.json; then
+            exit 1
+          fi
+          printf 'different subject\n' > subject.txt
+          if gh attestation verify subject.txt --owner civitaspo \
+            --signer-workflow civitaspo/testing-csm-ci-server/.github/workflows/csm-ci-attestation-spike.yml \
+            --predicate-type https://github.com/civitaspo/csm-ci-actions/attestation/release/v1; then
+            exit 1
+          fi
