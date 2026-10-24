@@ -8,13 +8,11 @@ approver: { id: 347401524, login: "testing-csm-ci-approver[bot]" }
 trust:
   committers:
     - { id: 4525500, login: civitaspo }
-    - { id: 347402450, login: "testing-csm-ci-untrusted-committer[bot]" }
   approvers:
     - { id: 4525500, login: civitaspo }
   mergers:
     - { id: 4525500, login: civitaspo }
-  bot_mergers:
-    - { id: 347402450, login: "testing-csm-ci-untrusted-committer[bot]" }
+  bot_mergers: []
 merge:
   required_checks:
     - { name: csm-ci/policy, app_id: 5455185 }
