@@ -1,0 +1,6 @@
+name: csm-ci-env-probe
+on: workflow_dispatch
+permissions: {}
+jobs:
+  call:
+    uses: civitaspo/csm-ci-actions/.github/workflows/env-probe.yml@74e55839b22b0dbdb8997cb44b9f4e381247f2e2
