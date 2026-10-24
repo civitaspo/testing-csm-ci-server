@@ -26,7 +26,7 @@ securefix:
   routes:
     - name: e2e-route
       from: default
-      to: main
+      to: e2e-securefix-route
       workflow: .github/workflows/csm-ci-securefix-route.yml
       paths: { e2e/securefix-route-result.txt: any, e2e/securefix-version.json: version-only }
 repositories:
