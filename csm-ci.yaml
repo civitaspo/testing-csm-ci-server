@@ -30,4 +30,4 @@ securefix:
       workflow: .github/workflows/csm-ci-securefix-route.yml
       paths: { e2e/securefix-route-result.txt: any, e2e/securefix-version.json: version-only }
 repositories:
-  - { name: civitaspo/testing-csm-ci-client, ops: [approve, merge, policy-check, securefix, release], release: { build_type: cargo, targets: [aarch64-apple-darwin, aarch64-unknown-linux-gnu, x86_64-apple-darwin, x86_64-pc-windows-msvc, x86_64-unknown-linux-gnu] } }
+  - { name: civitaspo/testing-csm-ci-client, ops: [approve, merge, policy-check, securefix, release], release: { build_type: none } }
