@@ -44,4 +44,5 @@ repo_settings:
     allow_squash_merge: true
     allow_merge_commit: false
     allow_rebase_merge: false
-  managed_files: {}
+  managed_files:
+    e2e/repo-settings-managed.txt: "managed by csm-ci e2e\n"
