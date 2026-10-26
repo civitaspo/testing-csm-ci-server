@@ -38,5 +38,14 @@ repositories:
   - { name: civitaspo/testing-csm-ci-client, ops: [approve, merge, policy-check, securefix, release], release: { build_type: none } }
   - { name: civitaspo/testing-csm-ci-server, ops: [] }
 repo_settings:
-  sponsorships: { enabled: false, github: ["civitaspo"] }
-  managed_files: {}
+  settings:
+    delete_branch_on_merge: true
+    allow_auto_merge: true
+    allow_squash_merge: true
+    allow_merge_commit: false
+    allow_rebase_merge: false
+    has_wiki: false
+    has_projects: false
+    allow_update_branch: true
+  managed_files:
+    e2e/repo-settings-managed.txt: "managed by csm-ci e2e\n"
