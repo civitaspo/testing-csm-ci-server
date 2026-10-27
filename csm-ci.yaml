@@ -46,6 +46,7 @@ repositories:
       .github/workflows/csm-ci-release-pr.yml: 23c82bbca9b66b0a90d582bb38ec4e85ce180f18ce0670a5f144c91f2a369da9
   - { name: civitaspo/testing-csm-ci-server, ops: [], sensitive_paths: { paths: ["**"], exempt: [] }, merge: { allow_bot_requests: false } }
 repo_settings:
+  sponsorships: { enabled: true, github: [civitaspo] }
   settings:
     delete_branch_on_merge: true
     allow_auto_merge: true
