@@ -1,1 +1,51 @@
-{"owners":["civitaspo"],"server_repository":"civitaspo/testing-csm-ci-server","apps":{"client_bot_id":347395374,"server_app_id":5455185,"server_bot_id":347400474},"approver":{"id":347401524,"login":"testing-csm-ci-approver[bot]"},"trust":{"committers":[{"id":4525500,"login":"civitaspo"}],"approvers":[{"id":4525500,"login":"civitaspo"}],"mergers":[{"id":4525500,"login":"civitaspo"}],"bot_mergers":[]},"merge":{"required_checks":[{"name":"status-check","app_id":15368}],"deadline_minutes":1},"policies":[{"type":"signed-commits"},{"type":"trusted-committers"},{"type":"sensitive-paths","paths":[".github/**","package.json","bun.lock"],"exempt":[{"id":4525500,"login":"civitaspo"}]}],"securefix":{"allow_workflow_changes":false,"routes":[{"name":"release-pr","from":"default","to":"release/next","workflow":".github/workflows/csm-ci-release-pr.yml","paths":{"CHANGELOG.md":"any",".release-version":"semver","Cargo.toml":"version-only","Cargo.lock":"version-only","package.json":"version-only","pyproject.toml":"version-only","dbt_project.yml":"version-only"}},{"name":"e2e-route","from":"default","to":"e2e-securefix-route","workflow":".github/workflows/csm-ci-securefix-route.yml","paths":{"e2e/securefix-route-result.txt":"any","e2e/securefix-version.json":"version-only"}}]},"repo_settings":{"managed_files":{}},"repositories":[{"name":"civitaspo/testing-csm-ci-client","ops":["approve","merge","policy-check","securefix","release"],"release":{"build_type":"none"}},{"name":"civitaspo/testing-csm-ci-server","ops":[]}]}
+owners: [civitaspo]
+server_repository: civitaspo/testing-csm-ci-server
+apps:
+  client_bot_id: 347395374 # testing-csm-ci-client[bot]
+  server_app_id: 5455185 # testing-csm-ci-server
+  server_bot_id: 347400474 # testing-csm-ci-server[bot]
+approver: { id: 347401524, login: "testing-csm-ci-approver[bot]" }
+trust:
+  committers:
+    - { id: 4525500, login: civitaspo }
+  approvers:
+    - { id: 4525500, login: civitaspo }
+  mergers:
+    - { id: 4525500, login: civitaspo }
+  bot_mergers: []
+merge:
+  required_checks:
+    - { name: csm-ci/policy, app_id: 5455185 }
+  deadline_minutes: 1
+policies:
+  - { type: signed-commits }
+  - { type: trusted-committers }
+  - { type: sensitive-paths, paths: [".github/**", "package.json", "bun.lock"], exempt: [{ id: 4525500, login: civitaspo }] }
+securefix:
+  allow_workflow_changes: false
+  routes:
+    - name: release-pr
+      from: default
+      to: release/next
+      workflow: .github/workflows/csm-ci-release-pr.yml
+      paths: { CHANGELOG.md: any, .release-version: semver, Cargo.toml: version-only, Cargo.lock: version-only, package.json: version-only, pyproject.toml: version-only, dbt_project.yml: version-only }
+    - name: e2e-route
+      from: default
+      to: e2e-securefix-route
+      workflow: .github/workflows/csm-ci-securefix-route.yml
+      paths: { e2e/securefix-route-result.txt: any, e2e/securefix-version.json: version-only }
+repositories:
+  - { name: civitaspo/testing-csm-ci-client, ops: [approve, merge, policy-check, securefix, release], release: { build_type: none } }
+  - { name: civitaspo/testing-csm-ci-server, ops: [] }
+repo_settings:
+  settings:
+    delete_branch_on_merge: true
+    allow_auto_merge: true
+    allow_squash_merge: true
+    allow_merge_commit: false
+    allow_rebase_merge: false
+    has_wiki: false
+    has_projects: false
+    allow_update_branch: true
+  managed_files:
+    e2e/repo-settings-managed.txt: "managed by csm-ci e2e\n"
