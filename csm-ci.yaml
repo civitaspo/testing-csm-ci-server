@@ -1,26 +1,40 @@
-owners: [civitaspo]
+owners:
+  - civitaspo
 server_repository: civitaspo/testing-csm-ci-server
 apps:
-  client_bot_id: 347395374 # testing-csm-ci-client[bot]
-  server_app_id: 5455185 # testing-csm-ci-server
-  server_bot_id: 347400474 # testing-csm-ci-server[bot]
-approver: { id: 347401524, login: "testing-csm-ci-approver[bot]" }
+  client_bot_id: 347395374
+  server_app_id: 5455185
+  server_bot_id: 347400474
+approver:
+  id: 347401524
+  login: testing-csm-ci-approver[bot]
 trust:
   committers:
-    - { id: 4525500, login: civitaspo }
+    - id: 4525500
+      login: civitaspo
   approvers:
-    - { id: 4525500, login: civitaspo }
+    - id: 4525500
+      login: civitaspo
   mergers:
-    - { id: 4525500, login: civitaspo }
+    - id: 4525500
+      login: civitaspo
   bot_mergers: []
 merge:
   required_checks:
-    - { name: csm-ci/policy, app_id: 5455185 }
+    - name: csm-ci/policy
+      app_id: 5455185
   deadline_minutes: 1
 policies:
-  - { type: signed-commits }
-  - { type: trusted-committers }
-  - { type: sensitive-paths, paths: [".github/**", "package.json", "bun.lock"], exempt: [{ id: 4525500, login: civitaspo }] }
+  - type: signed-commits
+  - type: trusted-committers
+  - type: sensitive-paths
+    paths:
+      - .github/**
+      - package.json
+      - bun.lock
+    exempt:
+      - id: 4525500
+        login: civitaspo
 securefix:
   allow_workflow_changes: false
   routes:
@@ -28,23 +42,21 @@ securefix:
       from: default
       to: release/next
       workflow: .github/workflows/csm-ci-release-pr.yml
-      paths: { CHANGELOG.md: any, .release-version: semver, Cargo.toml: version-only, Cargo.lock: version-only, package.json: version-only, pyproject.toml: version-only, dbt_project.yml: version-only }
+      paths:
+        CHANGELOG.md: any
+        .release-version: semver
+        Cargo.toml: version-only
+        Cargo.lock: version-only
+        package.json: version-only
+        pyproject.toml: version-only
+        dbt_project.yml: version-only
     - name: e2e-route
       from: default
       to: e2e-securefix-route
       workflow: .github/workflows/csm-ci-securefix-route.yml
-      paths: { e2e/securefix-route-result.txt: any, e2e/securefix-version.json: version-only }
-repositories:
-  - name: civitaspo/testing-csm-ci-client
-    ops: [approve, merge, policy-check, securefix, release]
-    release: { build_type: none }
-    workflow_adoption:
-      .github/workflows/csm-ci-approve.yml: e84f9007af6d84c11dd6c30a30ce2038188dcf8f5313cde8d9c8f75593837aca
-      .github/workflows/csm-ci-policy-check.yml: dc41080cdb03735e2ff02675afbcef387bf2f5b80ac1d33176f9244248be8430
-      .github/workflows/csm-ci-merge.yml: c6a10cf0b6948d5963286dfa59907dde8b850497b6a7166f9ac0831d5aaad3f2
-      .github/workflows/csm-ci-release.yml: 06a935ad2d7e68134c611b94ba9a2273ce01e8807c8915d3ebd351e667618ce2
-      .github/workflows/csm-ci-release-pr.yml: 23c82bbca9b66b0a90d582bb38ec4e85ce180f18ce0670a5f144c91f2a369da9
-  - { name: civitaspo/testing-csm-ci-server, ops: [], sensitive_paths: { paths: ["**"], exempt: [] }, merge: { allow_bot_requests: false } }
+      paths:
+        e2e/securefix-route-result.txt: any
+        e2e/securefix-version.json: version-only
 repo_settings:
   settings:
     delete_branch_on_merge: true
@@ -57,3 +69,37 @@ repo_settings:
     allow_update_branch: true
   additional_managed_files:
     e2e/repo-settings-managed.txt: managed-files/repo-settings-managed.txt
+repositories:
+  - name: civitaspo/testing-csm-ci-client
+    ops: &a1
+      - approve
+      - merge
+      - policy-check
+      - securefix
+      - release
+    release: &a2
+      build_type: none
+    workflow_adoption: &a3
+      .github/workflows/csm-ci-approve.yml: e84f9007af6d84c11dd6c30a30ce2038188dcf8f5313cde8d9c8f75593837aca
+      .github/workflows/csm-ci-policy-check.yml: dc41080cdb03735e2ff02675afbcef387bf2f5b80ac1d33176f9244248be8430
+      .github/workflows/csm-ci-merge.yml: c6a10cf0b6948d5963286dfa59907dde8b850497b6a7166f9ac0831d5aaad3f2
+      .github/workflows/csm-ci-release.yml: 06a935ad2d7e68134c611b94ba9a2273ce01e8807c8915d3ebd351e667618ce2
+      .github/workflows/csm-ci-release-pr.yml: 23c82bbca9b66b0a90d582bb38ec4e85ce180f18ce0670a5f144c91f2a369da9
+    sensitive_paths:
+      paths:
+        - "**"
+      exempt: []
+    merge:
+      allow_bot_requests: false
+  - name: civitaspo/testing-csm-ci-client
+    ops: *a1
+    release: *a2
+    workflow_adoption: *a3
+  - name: civitaspo/testing-csm-ci-server
+    ops: []
+    sensitive_paths:
+      paths:
+        - "**"
+      exempt: []
+    merge:
+      allow_bot_requests: false
