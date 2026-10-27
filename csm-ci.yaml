@@ -31,7 +31,7 @@ securefix:
       paths: { CHANGELOG.md: any, .release-version: semver, Cargo.toml: version-only, Cargo.lock: version-only, package.json: version-only, pyproject.toml: version-only, dbt_project.yml: version-only }
     - name: e2e-route
       from: default
-      to: main
+      to: e2e-securefix-route
       workflow: .github/workflows/csm-ci-securefix-route.yml
       paths: { e2e/securefix-route-result.txt: any, e2e/securefix-version.json: version-only }
 repositories:
