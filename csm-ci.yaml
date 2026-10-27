@@ -37,7 +37,7 @@ securefix:
 repositories:
   - name: civitaspo/testing-csm-ci-client
     ops: [approve, merge, policy-check, securefix, release]
-    release: { build_type: none }
+    release: { build_type: goreleaser }
     workflow_adoption:
       .github/workflows/csm-ci-approve.yml: e84f9007af6d84c11dd6c30a30ce2038188dcf8f5313cde8d9c8f75593837aca
       .github/workflows/csm-ci-policy-check.yml: dc41080cdb03735e2ff02675afbcef387bf2f5b80ac1d33176f9244248be8430
