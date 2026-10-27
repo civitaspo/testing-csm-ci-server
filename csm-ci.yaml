@@ -84,7 +84,7 @@ repositories:
       - release
     release: &a2
       build_type: none
-    sensitive_paths:
+    sensitive_paths: &a3
       paths:
         - "**"
       exempt:
@@ -93,10 +93,22 @@ repositories:
         - id: 4525500
           login: civitaspo
     merge:
-      allow_bot_requests: true
+      allow_bot_requests: false
   - name: civitaspo/testing-csm-ci-client
     ops: *a1
     release: *a2
+    sensitive_paths: *a3
+    merge:
+      allow_bot_requests: true
+  - name: civitaspo/testing-csm-ci-client
+    ops:
+      - approve
+      - merge
+      - policy-check
+      - securefix
+      - release
+    release:
+      build_type: none
   - name: civitaspo/testing-csm-ci-server
     ops: []
     sensitive_paths:
