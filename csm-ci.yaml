@@ -36,7 +36,7 @@ securefix:
 repositories:
   - name: civitaspo/testing-csm-ci-client
     ops: [approve, merge, policy-check, securefix, release]
-    release: { build_type: none }
+    release: { build_type: terraform-provider, provider_name: csm-ci-test }
   - { name: civitaspo/testing-csm-ci-server, ops: [], sensitive_paths: { paths: ["**"], exempt: [] }, merge: { allow_bot_requests: false } }
 repo_settings:
   settings:
