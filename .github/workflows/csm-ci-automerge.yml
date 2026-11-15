@@ -20,5 +20,4 @@ jobs:
     secrets:
       CSM_CI_SERVER_APP_PRIVATE_KEY: ${{ secrets.CSM_CI_SERVER_APP_PRIVATE_KEY }}
     permissions:
-      actions: write
       contents: read
