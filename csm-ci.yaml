@@ -1,4 +1,4 @@
-owners: [civitaspo]
+owners: [ civitaspo ]
 server_repository: civitaspo/testing-csm-ci-server
 apps:
   client_bot_id: 347395374 # testing-csm-ci-client[bot]
@@ -19,8 +19,15 @@ merge:
 policies:
   - { type: signed-commits }
   - { type: trusted-committers }
-  - { type: pull-request-title, types: [feat, fix, docs, refactor, test, ci, build, chore, perf, revert] }
-  - { type: sensitive-paths, paths: [".github/**", "package.json", "bun.lock"], exempt: [{ id: 4525500, login: civitaspo }] }
+  - {
+      type: pull-request-title,
+      types: [ feat, fix, docs, refactor, test, ci, build, chore, perf, revert ]
+    }
+  - {
+      type: sensitive-paths,
+      paths: [ ".github/**", "package.json", "bun.lock" ],
+      exempt: [ { id: 4525500, login: civitaspo } ]
+    }
 securefix:
   allow_workflow_changes: false
   routes:
@@ -28,17 +35,38 @@ securefix:
       from: default
       to: release/next
       workflow: .github/workflows/csm-ci-release-pr.yml
-      paths: { CHANGELOG.md: any, .release-version: semver, Cargo.toml: version-only, Cargo.lock: version-only, package.json: version-only, pyproject.toml: version-only, dbt_project.yml: version-only, herdr-plugin.toml: version-only }
+      paths:
+        {
+          CHANGELOG.md: any,
+          .release-version: semver,
+          Cargo.toml: version-only,
+          Cargo.lock: version-only,
+          package.json: version-only,
+          pyproject.toml: version-only,
+          dbt_project.yml: version-only,
+          herdr-plugin.toml: version-only
+        }
     - name: e2e-route
       from: default
       to: e2e-securefix-route
       workflow: .github/workflows/csm-ci-securefix-route.yml
-      paths: { e2e/securefix-route-result.txt: any, e2e/securefix-version.json: version-only }
+      paths:
+        {
+          e2e/securefix-route-result.txt: any,
+          e2e/securefix-version.json: version-only
+        }
 repositories:
   - name: civitaspo/testing-csm-ci-client
-    ops: [approve, merge, policy-check, securefix, release]
+    ops: [ approve, merge, policy-check, securefix, release ]
     release: { build_type: none }
-  - { name: civitaspo/testing-csm-ci-server, ops: [], sensitive_paths: { paths: ["**"], exempt: [] }, merge: { allow_bot_requests: false } }
+    integration_branches:
+      - e2e-merge-gate-45c00318-1c4a-4a2c-983a-3d2f4f9487f6
+  - {
+      name: civitaspo/testing-csm-ci-server,
+      ops: [],
+      sensitive_paths: { paths: [ "**" ], exempt: [] },
+      merge: { allow_bot_requests: false }
+    }
 repo_settings:
   auto_merge_managed_files: false
   settings:
