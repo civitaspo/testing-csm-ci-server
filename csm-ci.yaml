@@ -20,7 +20,7 @@ policies:
   - { type: signed-commits }
   - { type: trusted-committers }
   - { type: pull-request-title, types: [feat, fix, docs, refactor, test, ci, build, chore, perf, revert] }
-  - { type: sensitive-paths, paths: [".github/**", "package.json", "bun.lock"], exempt: [{ id: 4525500, login: civitaspo }] }
+  - { type: sensitive-paths, paths: [".github/**", "package.json", "bun.lock"], exempt: [] }
 securefix:
   allow_workflow_changes: false
   routes:
