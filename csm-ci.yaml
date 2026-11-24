@@ -40,7 +40,7 @@ repositories:
     release: { build_type: none }
   - { name: civitaspo/testing-csm-ci-server, ops: [], sensitive_paths: { paths: ["**"], exempt: [] }, merge: { allow_bot_requests: false } }
 repo_settings:
-  auto_merge_managed_files: false
+  auto_merge_managed_files: true
   settings:
     delete_branch_on_merge: true
     allow_auto_merge: true
@@ -53,3 +53,4 @@ repo_settings:
     dependabot_security_updates: false
   additional_managed_files:
     e2e/repo-settings-managed.txt: managed-files/repo-settings-managed.txt
+    e2e/repo-settings-managed-drift.txt: managed-files/repo-settings-managed.txt
